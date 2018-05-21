@@ -16,6 +16,8 @@ insert into OFICIO values('10000','Analista Programador','16114499-1');
 insert into USUARIOS values('16114499-1','Marco Antonio','Urrutia Molina');
 
 select * from USUARIOS join OFICIO on USUARIOS.RUT = OFICIO.RUT where OFICIO.RUT = '16114499-1';
+
+select usuarios.RUT, usuarios.NOMBRE, oficio.OFICIO from oficio , usuarios where usuarios.RUT = oficio.RUT and usuarios.RUT = '16114499-3';
 ----------------------------1------------------------------------
 create or replace PROCEDURE ALTA_DEPTO(P_FECHAIN IN DATE, P_FECHAOUT IN DATE, P_DEPTO IN number)
 IS
