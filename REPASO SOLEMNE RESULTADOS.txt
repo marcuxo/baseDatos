@@ -86,5 +86,28 @@ BEGIN
     END LOOP;
     CLOSE CUR_EMP;
 END APE_PER;
+----------------------------procedimiento de actualizacion------------------------------------
+create or replace procedure actualiza_depto(cod_depto in varchar2, depto in varchar2)
+is
+begin
+  update departamento set DEPARTAMENTO = depto where COD_DEPARTAMENTO = cod_depto;
+  DBMS_OUTPUT.put_line('Registro actualizado.');
+end actualiza_depto;
 
 EXEC APE_PER('URRUTIA');
+
+----------------------------procedimiento CRUD------------------------------------
+create or replace procedure CRUD_oficio(cod_ofi in varchar2, ofi in varchar2, crud in varchar2)
+is
+begin
+  if crud = 'actualizar' then
+  update OFICIO set OFICIO = ofi where COD_OFICIO = cod_ofi;
+  DBMS_OUTPUT.put_line('Registro actualizado');
+  ELSIF crud = 'insertar' then
+  INSERT INTO OFICIO VALUES (cod_ofi,ofi);
+  DBMS_OUTPUT.put_line('Registro insertado');
+  ELSIF crud = 'eliminar' then
+  DELETE FROM OFICIO WHERE COD_OFICIO = cod_ofi;
+  DBMS_OUTPUT.put_line('Registro eliminado');
+  end if;
+end CRUD_oficio;
