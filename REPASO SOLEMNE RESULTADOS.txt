@@ -1,0 +1,90 @@
+create table usuarios(
+  rut varchar2(12)not null primary key,
+  nombre varchar2(50)not null,
+  apellidos varchar2(50)not null
+);
+
+create table oficio(
+  cod_oficio varchar2(5)not null primary key,
+  oficio varchar2(50) not null,
+  rut varchar2(12)not null
+);
+alter TABLE oficio ADD CONSTRAINT rut_pk FOREIGN key(rut) REFERENCES usuarios(rut);--foreign key
+
+insert into OFICIO values('10000','Analista Programador','16114499-1');
+
+insert into USUARIOS values('16114499-1','Marco Antonio','Urrutia Molina');
+
+select * from USUARIOS join OFICIO on USUARIOS.RUT = OFICIO.RUT where OFICIO.RUT = '16114499-1';
+----------------------------1------------------------------------
+create or replace PROCEDURE ALTA_DEPTO(P_FECHAIN IN DATE, P_FECHAOUT IN DATE, P_DEPTO IN number)
+IS
+  CURSOR CUR_EMP IS SELECT * FROM EMP WHERE FECHA_ALT BETWEEN P_FECHAIN and P_FECHAOUT and P_DEPTO = DEPT_NO;
+  REGISTRO CUR_EMP%rowtype;
+BEGIN
+  OPEN CUR_EMP;
+  LOOP
+    FETCH CUR_EMP INTO REGISTRO;
+    EXIT WHEN CUR_EMP%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    DBMS_OUTPUT.PUT_LINE('N°:'||REGISTRO.EMP_NO);
+    DBMS_OUTPUT.PUT_LINE('APELLIDO:'|| REGISTRO.APELLIDO);
+    DBMS_OUTPUT.PUT_LINE('FECHA DE ALTA:'|| REGISTRO.FECHA_ALT);
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    END LOOP;
+    CLOSE CUR_EMP;
+END ALTA_DEPTO;
+
+exec ALTA_DEPTO('01/01/1965','01/01/1985',20);
+----------------------------2------------------------------------
+create or replace procedure insert_emp(p_emp_no in number,p_apellido in varchar2,p_oficio in varchar2,p_dir in number,p_fecha in date,
+p_salario in number,p_comision in number,p_depto in number)
+is
+begin
+insert into EMP values(p_emp_no,p_apellido,p_oficio,p_dir,p_fecha,p_salario,p_comision,p_depto);
+end insert_emp;
+
+exec insert_emp(7845,'URRUTIA','EMPLEADO',9856,'30/01/2018',500000,25000,40);
+
+----------------------------3------------------------------------
+create or replace PROCEDURE COUNT_PER(P_DEPTO IN number)
+IS
+  CURSOR CUR_EMP IS SELECT * FROM EMP WHERE P_DEPTO = DEPT_NO;
+  REGISTRO CUR_EMP%rowtype;
+  NUMERO NUMBER;
+BEGIN
+SELECT COUNT (*) INTO NUMERO FROM EMP WHERE DEPT_NO = P_DEPTO GROUP BY EMP_NO;
+DBMS_OUTPUT.PUT_LINE('NUMERO TOTAL DE PERSONAS:'|| NUMERO);
+  OPEN CUR_EMP;
+  LOOP
+    FETCH CUR_EMP INTO REGISTRO;
+    EXIT WHEN CUR_EMP%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    DBMS_OUTPUT.PUT_LINE('APELLIDO:'|| REGISTRO.APELLIDO);
+    DBMS_OUTPUT.PUT_LINE('NUMERO PERSONA:'|| REGISTRO.EMP_NO);
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    END LOOP;
+    CLOSE CUR_EMP;
+END COUNT_PER;
+
+EXEC COUNT_PER(20);
+
+----------------------------4------------------------------------
+create or replace PROCEDURE APE_PER(P_APE IN VARCHAR2)
+IS
+  CURSOR CUR_EMP IS SELECT * FROM EMP WHERE APELLIDO = P_APE;
+  REGISTRO CUR_EMP%rowtype;
+BEGIN
+  OPEN CUR_EMP;
+  LOOP
+    FETCH CUR_EMP INTO REGISTRO;
+    EXIT WHEN CUR_EMP%NOTFOUND;
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    DBMS_OUTPUT.PUT_LINE('APELLIDO:'|| REGISTRO.APELLIDO);
+    DBMS_OUTPUT.PUT_LINE('NUMERO DEPARTAMENTO:'|| REGISTRO.DEPT_NO);
+    DBMS_OUTPUT.PUT_LINE('=========================================');
+    END LOOP;
+    CLOSE CUR_EMP;
+END APE_PER;
+
+EXEC APE_PER('URRUTIA');
